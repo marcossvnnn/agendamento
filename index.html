@@ -7,15 +7,13 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-  :root {
+  :root{
     --cream:#F5F0E8;--dark:#1A1A18;--accent:#C8A96E;
-    --accent-light:#E8D9BC;--muted:#7A7469;--surface:#FFFFFF;
+    --accent-light:#E8D9BC;--muted:#7A7469;--surface:#FFF;
     --border:#E2DAD0;--radius:14px;--radius-sm:8px;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;}
-
-  /* HEADER */
   header{background:var(--dark);color:white;padding:0 1.25rem;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100;}
   .logo{display:flex;align-items:center;gap:10px;}
   .logo-icon{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
@@ -24,15 +22,10 @@
   .badge{background:rgba(200,169,110,0.15);border:1px solid rgba(200,169,110,0.3);color:var(--accent);font-size:11px;padding:4px 10px;border-radius:20px;display:flex;align-items:center;gap:5px;white-space:nowrap;}
   .dot{width:5px;height:5px;background:#4CAF50;border-radius:50%;animation:pulse 2s infinite;}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-
-  /* LAYOUT */
-  .container{max-width:600px;margin:0 auto;padding:1.5rem 1rem 3rem;}
-
+  .container{max-width:600px;margin:0 auto;padding:1.5rem 1rem 6rem;}
   .page-title{font-family:'DM Serif Display',serif;font-size:clamp(1.8rem,6vw,2.8rem);line-height:1.1;letter-spacing:-0.02em;margin-bottom:.3rem;}
   .page-title em{font-style:italic;color:var(--accent);}
   .page-sub{color:var(--muted);font-size:14px;margin-bottom:1.75rem;font-weight:300;}
-
-  /* STEPS */
   .steps-bar{display:flex;align-items:center;margin-bottom:1.75rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border);}
   .step-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);flex:1;min-width:0;}
   .step-label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -42,27 +35,21 @@
   .step-item.active .step-num{background:var(--dark);border-color:var(--dark);color:white;}
   .step-item.done .step-num{background:var(--accent);border-color:var(--accent);color:white;}
   .step-line{flex:1;height:1px;background:var(--border);margin:0 6px;max-width:40px;}
-
-  /* CARDS */
   .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:1rem;}
   .card-header{padding:16px 18px 12px;border-bottom:1px solid var(--border);}
   .card-header h3{font-size:14px;font-weight:500;}
   .card-header p{font-size:12px;color:var(--muted);margin-top:2px;}
   .card-body{padding:16px 18px;}
   .section-title{font-size:11px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;}
-
-  /* SERVICES */
   .service-list{display:flex;flex-direction:column;gap:8px;}
   .service-item{display:flex;align-items:center;gap:10px;padding:12px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all .18s;-webkit-tap-highlight-color:transparent;}
-  .service-item:hover,.service-item:active{border-color:var(--accent-light);background:#FDFAF5;}
+  .service-item:active{border-color:var(--accent-light);background:#FDFAF5;}
   .service-item.selected{border-color:var(--accent);background:#FDFAF5;}
   .service-check{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:transparent;transition:all .18s;}
   .service-item.selected .service-check{background:var(--accent);border-color:var(--accent);color:white;}
   .service-name{font-size:14px;font-weight:500;flex:1;}
   .service-meta{font-size:11px;color:var(--muted);}
   .service-price{font-size:14px;font-weight:500;flex-shrink:0;}
-
-  /* CALENDAR */
   .cal-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:1rem;}
   .cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
   .cal-nav button{width:34px;height:34px;border:1px solid var(--border);border-radius:8px;background:white;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .15s;color:var(--dark);-webkit-tap-highlight-color:transparent;}
@@ -71,13 +58,12 @@
   .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
   .cal-dow{text-align:center;font-size:10px;color:var(--muted);padding:3px 0 6px;text-transform:uppercase;letter-spacing:.03em;}
   .cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:13px;border-radius:7px;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent;}
-  .cal-day:active:not(.empty):not(.past){background:var(--accent-light);}
+  .cal-day:active:not(.empty):not(.past):not(.closed){background:var(--accent-light);}
   .cal-day.past{color:#C8C4BC;cursor:default;pointer-events:none;}
+  .cal-day.closed{color:#C8C4BC;cursor:default;pointer-events:none;text-decoration:line-through;}
   .cal-day.empty{pointer-events:none;}
   .cal-day.today{font-weight:500;color:var(--accent);}
   .cal-day.selected{background:var(--dark);color:white;font-weight:500;}
-
-  /* SLOTS */
   .slots-section{display:none;margin-bottom:1rem;}
   .slots-date-label{font-size:11px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px;}
   .slots-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;}
@@ -89,29 +75,27 @@
   .slot.selected{background:var(--dark);color:white;border-color:var(--dark);font-weight:500;}
   .slot.busy{color:#C8C4BC;cursor:default;text-decoration:line-through;font-size:12px;}
   .spinner{text-align:center;padding:20px;color:var(--muted);font-size:13px;}
-
-  /* SUMMARY (mobile: bottom sticky card) */
+  .no-slots{text-align:center;padding:16px;color:var(--muted);font-size:13px;}
   .summary-sticky{position:sticky;bottom:0;left:0;right:0;background:var(--dark);padding:14px 16px;z-index:50;display:none;}
   .summary-sticky.show{display:block;}
   .summary-sticky-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
   .summary-sticky-info{font-size:13px;color:rgba(255,255,255,0.7);}
   .summary-sticky-price{font-size:18px;font-weight:500;color:var(--accent);}
   .summary-sticky-sub{font-size:11px;color:rgba(255,255,255,0.4);margin-top:1px;}
-
-  /* FORM */
   .form-group{margin-bottom:14px;}
   label{font-size:13px;color:var(--muted);display:block;margin-bottom:5px;}
   input[type=text],input[type=tel],input[type=email],textarea{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:9px;font-size:15px;font-family:'DM Sans',sans-serif;background:white;color:var(--dark);transition:border-color .15s;outline:none;-webkit-appearance:none;}
   input:focus,textarea:focus{border-color:var(--accent);}
   textarea{resize:none;height:75px;}
-
-  /* BUTTONS */
+  .resumo-box{background:white;border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-top:12px;}
+  .resumo-row{display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid var(--border);}
+  .resumo-row:last-child{border-bottom:none;font-size:14px;font-weight:500;padding-top:8px;}
+  .resumo-row span:last-child{font-weight:500;}
+  .resumo-row.total span:last-child{color:var(--accent);}
   .btn-primary{width:100%;padding:14px;background:var(--accent);color:white;border:none;border-radius:12px;font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .18s;margin-top:14px;letter-spacing:-0.01em;-webkit-tap-highlight-color:transparent;}
   .btn-primary:active{background:#B8994E;transform:scale(0.98);}
   .btn-primary:disabled{opacity:.45;cursor:default;transform:none;}
   .btn-back{background:transparent;border:none;color:var(--muted);font-size:13px;cursor:pointer;padding:0;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:4px;margin-top:10px;-webkit-tap-highlight-color:transparent;}
-
-  /* SUCCESS */
   .success-screen{text-align:center;padding:2rem 1rem 3rem;}
   .success-icon{width:64px;height:64px;background:#EAF3EA;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;font-size:28px;}
   .success-title{font-family:'DM Serif Display',serif;font-size:1.8rem;letter-spacing:-0.02em;margin-bottom:.4rem;}
@@ -121,7 +105,6 @@
   .conf-row:last-child{border-bottom:none;}
   .conf-key{color:var(--muted);}
   .conf-val{font-weight:500;text-align:right;max-width:60%;}
-
   .screen{display:none;}
   .screen.active{display:block;}
 </style>
@@ -144,7 +127,6 @@
   <div class="container">
     <h1 class="page-title">Agende seu <em>horário</em></h1>
     <p class="page-sub">Escolha o serviço, data e horário.</p>
-
     <div class="steps-bar">
       <div class="step-item active"><div class="step-num">1</div><span class="step-label">Serviço</span></div>
       <div class="step-line"></div>
@@ -154,27 +136,8 @@
     </div>
 
     <div class="section-title">Escolha o serviço</div>
-    <div class="service-list" style="margin-bottom:1.25rem;">
-      <div class="service-item" data-name="Corte de cabelo" data-price="45" data-duration="30min" onclick="selectService(this)">
-        <div class="service-check">✓</div>
-        <div style="flex:1"><div class="service-name">Corte de cabelo</div><div class="service-meta">30 min</div></div>
-        <div class="service-price">R$45</div>
-      </div>
-      <div class="service-item" data-name="Barba" data-price="35" data-duration="20min" onclick="selectService(this)">
-        <div class="service-check">✓</div>
-        <div style="flex:1"><div class="service-name">Barba</div><div class="service-meta">20 min</div></div>
-        <div class="service-price">R$35</div>
-      </div>
-      <div class="service-item" data-name="Corte + Barba" data-price="70" data-duration="50min" onclick="selectService(this)">
-        <div class="service-check">✓</div>
-        <div style="flex:1"><div class="service-name">Corte + Barba</div><div class="service-meta">50 min · combo</div></div>
-        <div class="service-price">R$70</div>
-      </div>
-      <div class="service-item" data-name="Hidratação capilar" data-price="55" data-duration="40min" onclick="selectService(this)">
-        <div class="service-check">✓</div>
-        <div style="flex:1"><div class="service-name">Hidratação capilar</div><div class="service-meta">40 min</div></div>
-        <div class="service-price">R$55</div>
-      </div>
+    <div class="service-list" id="service-list" style="margin-bottom:1.25rem;">
+      <div class="spinner">Carregando serviços...</div>
     </div>
 
     <div class="section-title">Escolha a data</div>
@@ -196,6 +159,7 @@
           <div class="slots-grid" id="slots-manha"></div>
           <div class="slots-period">Tarde</div>
           <div class="slots-grid" id="slots-tarde"></div>
+          <div id="no-slots" class="no-slots" style="display:none;">Nenhum horário disponível nesta data.</div>
         </div>
       </div>
     </div>
@@ -218,7 +182,6 @@
   <div class="container">
     <h1 class="page-title">Seus <em>dados</em></h1>
     <p class="page-sub">Para confirmar seu agendamento.</p>
-
     <div class="steps-bar">
       <div class="step-item done"><div class="step-num">✓</div><span class="step-label">Serviço</span></div>
       <div class="step-line"></div>
@@ -226,8 +189,7 @@
       <div class="step-line"></div>
       <div class="step-item"><div class="step-num">3</div><span class="step-label">Confirmação</span></div>
     </div>
-
-    <div class="card" style="margin-bottom:0;">
+    <div class="card">
       <div class="card-header"><h3>Informações de contato</h3><p>Confirmação via WhatsApp</p></div>
       <div class="card-body">
         <div class="form-group"><label>Nome completo</label><input type="text" id="input-nome" placeholder="Ex: Carlos Silva" oninput="validateForm()"></div>
@@ -236,15 +198,12 @@
         <div class="form-group" style="margin-bottom:0;"><label>Observações <span style="color:var(--muted);font-weight:300;">(opcional)</span></label><textarea id="input-obs" placeholder="Ex: Corte mais curto nas laterais..."></textarea></div>
       </div>
     </div>
-
-    <div style="background:white;border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-top:12px;">
-      <div style="font-size:12px;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em;font-weight:500;">Resumo</div>
-      <div style="display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid var(--border);"><span style="color:var(--muted)">Serviço</span><span style="font-weight:500;" id="r-service">—</span></div>
-      <div style="display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid var(--border);"><span style="color:var(--muted)">Data</span><span style="font-weight:500;" id="r-date">—</span></div>
-      <div style="display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid var(--border);"><span style="color:var(--muted)">Horário</span><span style="font-weight:500;" id="r-time">—</span></div>
-      <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:500;padding:8px 0 2px;"><span>Total</span><span style="color:var(--accent);" id="r-price">—</span></div>
+    <div class="resumo-box">
+      <div class="resumo-row"><span style="color:var(--muted)">Serviço</span><span id="r-service">—</span></div>
+      <div class="resumo-row"><span style="color:var(--muted)">Data</span><span id="r-date">—</span></div>
+      <div class="resumo-row"><span style="color:var(--muted)">Horário</span><span id="r-time">—</span></div>
+      <div class="resumo-row total"><span>Total</span><span id="r-price">—</span></div>
     </div>
-
     <button class="btn-primary" id="btn-next-2" disabled onclick="goToStep3()">Confirmar agendamento →</button>
     <button class="btn-back" onclick="goToStep1()">← Voltar</button>
   </div>
@@ -271,26 +230,59 @@
 </div>
 
 <script>
-var SUPABASE_URL = 'https://msvvheuouratsgqlcyrg.supabase.co';
-var SUPABASE_KEY = 'sb_publishable_1ucHfP7zISTjwGusWQc7VA_ecIb4kL5';
-var db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+var SB_URL='https://msvvheuouratsgqlcyrg.supabase.co';
+var SB_KEY='sb_publishable_1ucHfP7zISTjwGusWQc7VA_ecIb4kL5';
+var db=window.supabase.createClient(SB_URL,SB_KEY);
 
-var MANHA = ['08:00','08:30','09:00','09:30','10:00','10:30','11:00','11:30'];
-var TARDE = ['13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00'];
-var MONTHS = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-var DOWS   = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
-var state  = {service:null,date:null,time:null,year:0,month:0};
+var MONTHS=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+var DOWS=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+var state={service:null,date:null,time:null,year:0,month:0};
+var diasAtivos=new Set([1,2,3,4,5,6]); // fallback
 
-function init(){
-  var n=new Date(); state.year=n.getFullYear(); state.month=n.getMonth();
+// ── INIT ──
+async function init(){
+  var n=new Date();state.year=n.getFullYear();state.month=n.getMonth();
+  await loadServices();
+  await loadDiasAtivos();
   renderCal();
 }
 
+// ── SERVIÇOS DO SUPABASE ──
+async function loadServices(){
+  var{data,error}=await db.from('servicos').select('*').eq('ativo',true).order('ordem',{ascending:true});
+  var list=document.getElementById('service-list');
+  if(error||!data||!data.length){
+    list.innerHTML='<div style="font-size:13px;color:var(--muted);padding:8px;">Erro ao carregar serviços.</div>';
+    return;
+  }
+  list.innerHTML='';
+  data.forEach(function(s){
+    var el=document.createElement('div');
+    el.className='service-item';
+    el.dataset.name=s.nome;el.dataset.price=s.preco;el.dataset.duration=s.duracao;
+    el.innerHTML=
+      '<div class="service-check">✓</div>'
+      +'<div style="flex:1"><div class="service-name">'+s.nome+'</div><div class="service-meta">'+s.duracao+'</div></div>'
+      +'<div class="service-price">R$'+s.preco+'</div>';
+    el.onclick=function(){selectService(el);};
+    list.appendChild(el);
+  });
+}
+
+// ── DIAS ATIVOS DO SUPABASE ──
+async function loadDiasAtivos(){
+  var{data,error}=await db.from('horarios_funcionamento').select('dia_semana,ativo');
+  if(!error&&data&&data.length){
+    diasAtivos=new Set(data.filter(function(d){return d.ativo;}).map(function(d){return d.dia_semana;}));
+  }
+}
+
+// ── CALENDÁRIO ──
 function fmtKey(y,m,d){return y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');}
 
 function renderCal(){
   document.getElementById('cal-month-label').textContent=MONTHS[state.month]+' '+state.year;
-  var grid=document.getElementById('cal-grid'); grid.innerHTML='';
+  var grid=document.getElementById('cal-grid');grid.innerHTML='';
   DOWS.forEach(function(d){var el=document.createElement('div');el.className='cal-dow';el.textContent=d;grid.appendChild(el);});
   var first=new Date(state.year,state.month,1).getDay();
   var days=new Date(state.year,state.month+1,0).getDate();
@@ -300,11 +292,14 @@ function renderCal(){
     var el=document.createElement('div');el.className='cal-day';
     var dt=new Date(state.year,state.month,d);dt.setHours(0,0,0,0);
     var key=fmtKey(state.year,state.month+1,d);
-    if(dt<today)el.classList.add('past');
+    if(dt<=today){el.classList.add('past');}
+    else if(!diasAtivos.has(dt.getDay())){el.classList.add('closed');el.title='Fechado';}
     if(dt.getTime()===today.getTime())el.classList.add('today');
     if(state.date===key)el.classList.add('selected');
     el.textContent=d;
-    (function(dd,kk){el.onclick=function(){selectDate(dd,kk);};})(d,key);
+    if(dt>today&&diasAtivos.has(dt.getDay())){
+      (function(dd,kk){el.onclick=function(){selectDate(dd,kk);};})(d,key);
+    }
     grid.appendChild(el);
   }
 }
@@ -312,31 +307,74 @@ function renderCal(){
 function prevMonth(){state.month--;if(state.month<0){state.month=11;state.year--;}renderCal();}
 function nextMonth(){state.month++;if(state.month>11){state.month=0;state.year++;}renderCal();}
 
+// ── SELECIONAR DATA E CARREGAR SLOTS DO SUPABASE ──
 async function selectDate(d,key){
-  state.date=key; state.time=null; renderCal();
-  var parts=key.split('-');
+  state.date=key;state.time=null;renderCal();
   document.getElementById('slots-date-label').textContent='Horários — '+d+' de '+MONTHS[state.month];
   document.getElementById('slots-section').style.display='block';
   document.getElementById('slots-loading').style.display='block';
   document.getElementById('slots-content').style.display='none';
   document.getElementById('slots-section').scrollIntoView({behavior:'smooth',block:'nearest'});
 
-  var {data:ocupados}=await db.from('agendamentos').select('horario').eq('data',key).neq('status','cancelado');
-  var busySet=new Set((ocupados||[]).map(function(a){return a.horario;}));
+  // Busca horários de funcionamento do dia
+  var dt=new Date(key+'T12:00:00');
+  var diaSemana=dt.getDay();
+  var{data:funcData}=await db.from('horarios_funcionamento').select('ativo,inicio,fim').eq('dia_semana',diaSemana).single();
+
+  // Gera todos os slots do dia
+  var todosSlots=[];
+  if(funcData&&funcData.ativo){
+    var ini=funcData.inicio||'08:00';
+    var fim=funcData.fim||'18:00';
+    var hI=parseInt(ini.split(':')[0]);var mI=parseInt(ini.split(':')[1]);
+    var hF=parseInt(fim.split(':')[0]);var mF=parseInt(fim.split(':')[1]);
+    var cur=hI*60+mI;var end=hF*60+mF;
+    while(cur<end){
+      var h=String(Math.floor(cur/60)).padStart(2,'0');
+      var m=String(cur%60).padStart(2,'0');
+      todosSlots.push(h+':'+m);
+      cur+=30;
+    }
+  }
+
+  // Busca ocupados (agendamentos + bloqueios)
+  var[agRes,blkRes]=await Promise.all([
+    db.from('agendamentos').select('horario').eq('data',key).neq('status','cancelado'),
+    db.from('horarios_bloqueados').select('horario').eq('data',key)
+  ]);
+  var ocupados=new Set([
+    ...((agRes.data||[]).map(function(a){return a.horario;})),
+    ...((blkRes.data||[]).map(function(b){return b.horario;}))
+  ]);
+
+  var livres=todosSlots.filter(function(h){return !ocupados.has(h);});
+
   document.getElementById('slots-loading').style.display='none';
   document.getElementById('slots-content').style.display='block';
 
-  function mkSlot(t){
+  var sm=document.getElementById('slots-manha');sm.innerHTML='';
+  var st=document.getElementById('slots-tarde');st.innerHTML='';
+
+  var manha=livres.filter(function(h){return parseInt(h.split(':')[0])<12;});
+  var tarde=livres.filter(function(h){return parseInt(h.split(':')[0])>=12;});
+
+  // Também mostra ocupados de forma riscada
+  var manhaAll=todosSlots.filter(function(h){return parseInt(h.split(':')[0])<12;});
+  var tardeAll=todosSlots.filter(function(h){return parseInt(h.split(':')[0])>=12;});
+
+  function mkSlot(h){
     var el=document.createElement('div');
-    el.className='slot'+(busySet.has(t)?' busy':'');
-    el.textContent=t;
-    if(!busySet.has(t)){(function(tt){el.onclick=function(){selectTime(tt);};})(t);}
+    el.className='slot'+(ocupados.has(h)?' busy':'');
+    el.textContent=h;
+    if(!ocupados.has(h)){(function(hh){el.onclick=function(){selectTime(hh);};})(h);}
     return el;
   }
-  var sm=document.getElementById('slots-manha');sm.innerHTML='';
-  MANHA.forEach(function(t){sm.appendChild(mkSlot(t));});
-  var st=document.getElementById('slots-tarde');st.innerHTML='';
-  TARDE.forEach(function(t){st.appendChild(mkSlot(t));});
+  manhaAll.forEach(function(h){sm.appendChild(mkSlot(h));});
+  tardeAll.forEach(function(h){st.appendChild(mkSlot(h));});
+
+  var noSlots=document.getElementById('no-slots');
+  noSlots.style.display=livres.length===0?'block':'none';
+
   updateSummary();
 }
 
@@ -407,13 +445,32 @@ function validateForm(){
 
 async function goToStep3(){
   var btn=document.getElementById('btn-next-2');
-  btn.disabled=true; btn.textContent='Salvando...';
+  btn.disabled=true;btn.textContent='Salvando...';
+
+  // Verifica se horário ainda está livre antes de salvar
+  var[agRes,blkRes]=await Promise.all([
+    db.from('agendamentos').select('horario').eq('data',state.date).neq('status','cancelado'),
+    db.from('horarios_bloqueados').select('horario').eq('data',state.date)
+  ]);
+  var ocupados=new Set([
+    ...((agRes.data||[]).map(function(a){return a.horario;})),
+    ...((blkRes.data||[]).map(function(b){return b.horario;}))
+  ]);
+  if(ocupados.has(state.time)){
+    alert('Este horário acabou de ser ocupado. Por favor, escolha outro.');
+    btn.disabled=false;btn.textContent='Confirmar agendamento →';
+    document.getElementById('screen-2').classList.remove('active');
+    document.getElementById('screen-1').classList.add('active');
+    await selectDate(parseInt(state.date.split('-')[2]),state.date);
+    return;
+  }
+
   var nome=document.getElementById('input-nome').value.trim();
   var tel=document.getElementById('input-tel').value.replace(/\D/g,'');
   var email=document.getElementById('input-email').value.trim();
   var obs=document.getElementById('input-obs').value.trim();
 
-  var {error}=await db.from('agendamentos').insert({
+  var{error}=await db.from('agendamentos').insert({
     cliente_phone:tel,cliente_nome:nome,cliente_email:email,obs:obs,
     servico:state.service.name,preco:parseInt(state.service.price),
     data:state.date,horario:state.time,status:'confirmado',
@@ -422,9 +479,10 @@ async function goToStep3(){
 
   if(error){
     alert('Erro ao salvar. Tente novamente.');
-    btn.disabled=false; btn.textContent='Confirmar agendamento →';
+    btn.disabled=false;btn.textContent='Confirmar agendamento →';
     return;
   }
+
   var p=state.date.split('-');
   document.getElementById('c-nome').textContent=nome;
   document.getElementById('c-service').textContent=state.service.name;
@@ -448,7 +506,7 @@ function resetAll(){
   document.getElementById('btn-next-2').textContent='Confirmar agendamento →';
   document.getElementById('screen-3').classList.remove('active');
   document.getElementById('screen-1').classList.add('active');
-  renderCal(); window.scrollTo(0,0);
+  renderCal();window.scrollTo(0,0);
 }
 
 init();
