@@ -8,100 +8,122 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root {
-    --cream: #F5F0E8; --dark: #1A1A18; --accent: #C8A96E;
-    --accent-light: #E8D9BC; --muted: #7A7469; --surface: #FFFFFF;
-    --border: #E2DAD0; --radius: 16px; --radius-sm: 8px;
+    --cream:#F5F0E8;--dark:#1A1A18;--accent:#C8A96E;
+    --accent-light:#E8D9BC;--muted:#7A7469;--surface:#FFFFFF;
+    --border:#E2DAD0;--radius:14px;--radius-sm:8px;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--dark); min-height: 100vh; }
-  header { background: var(--dark); color: white; padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 72px; position: sticky; top: 0; z-index: 100; }
-  .logo { display: flex; align-items: center; gap: 12px; }
-  .logo-icon { width: 36px; height: 36px; background: var(--accent); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
-  .logo-text { font-family: 'DM Serif Display', serif; font-size: 18px; }
-  .logo-sub { font-size: 11px; color: rgba(255,255,255,0.45); letter-spacing:.06em; text-transform:uppercase; }
-  .badge { background: rgba(200,169,110,0.15); border: 1px solid rgba(200,169,110,0.3); color: var(--accent); font-size: 12px; padding: 5px 12px; border-radius: 20px; display: flex; align-items: center; gap: 6px; }
-  .dot { width:6px;height:6px;background:#4CAF50;border-radius:50%;animation:pulse 2s infinite; }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;}
+
+  /* HEADER */
+  header{background:var(--dark);color:white;padding:0 1.25rem;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100;}
+  .logo{display:flex;align-items:center;gap:10px;}
+  .logo-icon{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+  .logo-text{font-family:'DM Serif Display',serif;font-size:16px;}
+  .logo-sub{font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:.05em;text-transform:uppercase;}
+  .badge{background:rgba(200,169,110,0.15);border:1px solid rgba(200,169,110,0.3);color:var(--accent);font-size:11px;padding:4px 10px;border-radius:20px;display:flex;align-items:center;gap:5px;white-space:nowrap;}
+  .dot{width:5px;height:5px;background:#4CAF50;border-radius:50%;animation:pulse 2s infinite;}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-  .container { max-width: 900px; margin: 0 auto; padding: 3rem 1.5rem; }
-  .page-title { font-family: 'DM Serif Display', serif; font-size: clamp(2rem,5vw,3rem); line-height: 1.1; letter-spacing: -0.02em; margin-bottom: .4rem; }
-  .page-title em { font-style: italic; color: var(--accent); }
-  .page-sub { color: var(--muted); font-size: 15px; margin-bottom: 2.5rem; font-weight: 300; }
-  .steps-bar { display: flex; align-items: center; margin-bottom: 2.5rem; border-bottom: 1px solid var(--border); padding-bottom: 1.5rem; }
-  .step-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); flex: 1; }
-  .step-item.active { color: var(--dark); font-weight: 500; }
-  .step-item.done { color: var(--accent); }
-  .step-num { width:26px;height:26px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;flex-shrink:0;transition:all .3s; }
-  .step-item.active .step-num { background:var(--dark);border-color:var(--dark);color:white; }
-  .step-item.done .step-num { background:var(--accent);border-color:var(--accent);color:white; }
-  .step-line { flex:1;height:1px;background:var(--border);margin:0 12px;max-width:60px; }
-  .booking-grid { display: grid; grid-template-columns: 1fr 340px; gap: 24px; align-items: start; }
-  @media(max-width:700px){ .booking-grid{grid-template-columns:1fr} }
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
-  .card-header { padding: 20px 24px 16px; border-bottom: 1px solid var(--border); }
-  .card-header h3 { font-size: 15px; font-weight: 500; }
-  .card-header p { font-size: 13px; color: var(--muted); margin-top: 3px; }
-  .card-body { padding: 20px 24px; }
-  .section-title { font-size: 11px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 12px; }
-  .service-list { display: flex; flex-direction: column; gap: 10px; }
-  .service-item { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); cursor: pointer; transition: all .18s; }
-  .service-item:hover { border-color: var(--accent-light); background: #FDFAF5; }
-  .service-item.selected { border-color: var(--accent); background: #FDFAF5; }
-  .service-check { width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .18s;font-size:11px;color:transparent; }
-  .service-item.selected .service-check { background:var(--accent);border-color:var(--accent);color:white; }
-  .service-name { font-size: 14px; font-weight: 500; flex: 1; }
-  .service-meta { font-size: 12px; color: var(--muted); }
-  .service-price { font-size: 15px; font-weight: 500; }
-  .cal-nav { display:flex;align-items:center;justify-content:space-between;margin-bottom:16px; }
-  .cal-nav button { width:32px;height:32px;border:1px solid var(--border);border-radius:8px;background:white;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .15s;color:var(--dark); }
-  .cal-nav button:hover { background:var(--dark);color:white;border-color:var(--dark); }
-  .cal-month { font-size: 14px; font-weight: 500; }
-  .cal-grid { display:grid;grid-template-columns:repeat(7,1fr);gap:4px; }
-  .cal-dow { text-align:center;font-size:11px;color:var(--muted);padding:4px 0 8px;letter-spacing:.04em;text-transform:uppercase; }
-  .cal-day { aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:13px;border-radius:8px;cursor:pointer;transition:all .15s;position:relative; }
-  .cal-day:hover:not(.empty):not(.past) { background:var(--accent-light); }
-  .cal-day.past { color:#C8C4BC;cursor:default;pointer-events:none; }
-  .cal-day.empty { pointer-events:none; }
-  .cal-day.today { font-weight:500;color:var(--accent); }
-  .cal-day.selected { background:var(--dark);color:white;font-weight:500; }
-  .slots-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px; }
-  .slot { padding:10px 8px;text-align:center;border:1.5px solid var(--border);border-radius:8px;font-size:13px;cursor:pointer;transition:all .15s; }
-  .slot:hover:not(.busy) { border-color:var(--accent);color:var(--accent); }
-  .slot.selected { background:var(--dark);color:white;border-color:var(--dark);font-weight:500; }
-  .slot.busy { color:#C8C4BC;cursor:default;text-decoration:line-through;font-size:12px; }
-  .slots-label { font-size:12px;color:var(--muted);margin-top:16px;margin-bottom:4px;font-weight:500;letter-spacing:.04em;text-transform:uppercase; }
-  .form-group { margin-bottom: 16px; }
-  label { font-size:13px;color:var(--muted);display:block;margin-bottom:6px; }
-  input[type=text],input[type=tel],input[type=email],textarea { width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:'DM Sans',sans-serif;background:white;color:var(--dark);transition:border-color .15s;outline:none; }
-  input:focus,textarea:focus { border-color:var(--accent); }
-  textarea { resize:none;height:80px; }
-  .summary-card { background:var(--dark);color:white;border-radius:var(--radius);padding:24px; }
-  .summary-title { font-family:'DM Serif Display',serif;font-size:18px;margin-bottom:20px;letter-spacing:-0.01em; }
-  .summary-row { display:flex;gap:12px;margin-bottom:14px;font-size:13px; }
-  .summary-icon { width:32px;height:32px;background:rgba(255,255,255,0.08);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0; }
-  .summary-key { color:rgba(255,255,255,0.45);font-size:11px;text-transform:uppercase;letter-spacing:.05em; }
-  .summary-val { font-weight:500;margin-top:1px; }
-  .summary-divider { height:1px;background:rgba(255,255,255,0.1);margin:16px 0; }
-  .summary-total { display:flex;justify-content:space-between;align-items:center; }
-  .summary-total-label { font-size:13px;color:rgba(255,255,255,0.5); }
-  .summary-total-val { font-size:22px;font-weight:500;color:var(--accent); }
-  .summary-placeholder { color:rgba(255,255,255,0.3);font-size:13px;text-align:center;padding:20px 0;font-style:italic; }
-  .btn-primary { width:100%;padding:14px;background:var(--accent);color:white;border:none;border-radius:12px;font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .18s;margin-top:16px;letter-spacing:-0.01em; }
-  .btn-primary:hover { background:#B8994E;transform:translateY(-1px); }
-  .btn-primary:disabled { opacity:.45;cursor:default;transform:none; }
-  .btn-back { background:transparent;border:none;color:var(--muted);font-size:13px;cursor:pointer;padding:0;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:4px;margin-top:10px;transition:color .15s; }
-  .btn-back:hover { color:var(--dark); }
-  .success-screen { text-align:center;padding:3rem 1.5rem;max-width:480px;margin:0 auto; }
-  .success-icon { width:72px;height:72px;background:#EAF3EA;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-size:32px; }
-  .success-title { font-family:'DM Serif Display',serif;font-size:2rem;letter-spacing:-0.02em;margin-bottom:.5rem; }
-  .success-sub { color:var(--muted);font-size:15px;line-height:1.6; }
-  .confirmation-box { background:white;border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;text-align:left;margin-top:1.5rem; }
-  .conf-row { display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid var(--border); }
-  .conf-row:last-child { border-bottom:none; }
-  .conf-key { color:var(--muted); }
-  .conf-val { font-weight:500; }
-  .screen { display:none; }
-  .screen.active { display:block; }
-  .spinner { text-align:center;padding:20px;color:var(--muted);font-size:13px; }
+
+  /* LAYOUT */
+  .container{max-width:600px;margin:0 auto;padding:1.5rem 1rem 3rem;}
+
+  .page-title{font-family:'DM Serif Display',serif;font-size:clamp(1.8rem,6vw,2.8rem);line-height:1.1;letter-spacing:-0.02em;margin-bottom:.3rem;}
+  .page-title em{font-style:italic;color:var(--accent);}
+  .page-sub{color:var(--muted);font-size:14px;margin-bottom:1.75rem;font-weight:300;}
+
+  /* STEPS */
+  .steps-bar{display:flex;align-items:center;margin-bottom:1.75rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border);}
+  .step-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);flex:1;min-width:0;}
+  .step-label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .step-item.active{color:var(--dark);font-weight:500;}
+  .step-item.done{color:var(--accent);}
+  .step-num{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;flex-shrink:0;transition:all .3s;}
+  .step-item.active .step-num{background:var(--dark);border-color:var(--dark);color:white;}
+  .step-item.done .step-num{background:var(--accent);border-color:var(--accent);color:white;}
+  .step-line{flex:1;height:1px;background:var(--border);margin:0 6px;max-width:40px;}
+
+  /* CARDS */
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:1rem;}
+  .card-header{padding:16px 18px 12px;border-bottom:1px solid var(--border);}
+  .card-header h3{font-size:14px;font-weight:500;}
+  .card-header p{font-size:12px;color:var(--muted);margin-top:2px;}
+  .card-body{padding:16px 18px;}
+  .section-title{font-size:11px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;}
+
+  /* SERVICES */
+  .service-list{display:flex;flex-direction:column;gap:8px;}
+  .service-item{display:flex;align-items:center;gap:10px;padding:12px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all .18s;-webkit-tap-highlight-color:transparent;}
+  .service-item:hover,.service-item:active{border-color:var(--accent-light);background:#FDFAF5;}
+  .service-item.selected{border-color:var(--accent);background:#FDFAF5;}
+  .service-check{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:transparent;transition:all .18s;}
+  .service-item.selected .service-check{background:var(--accent);border-color:var(--accent);color:white;}
+  .service-name{font-size:14px;font-weight:500;flex:1;}
+  .service-meta{font-size:11px;color:var(--muted);}
+  .service-price{font-size:14px;font-weight:500;flex-shrink:0;}
+
+  /* CALENDAR */
+  .cal-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:1rem;}
+  .cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+  .cal-nav button{width:34px;height:34px;border:1px solid var(--border);border-radius:8px;background:white;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .15s;color:var(--dark);-webkit-tap-highlight-color:transparent;}
+  .cal-nav button:active{background:var(--dark);color:white;border-color:var(--dark);}
+  .cal-month{font-size:14px;font-weight:500;}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+  .cal-dow{text-align:center;font-size:10px;color:var(--muted);padding:3px 0 6px;text-transform:uppercase;letter-spacing:.03em;}
+  .cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:13px;border-radius:7px;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent;}
+  .cal-day:active:not(.empty):not(.past){background:var(--accent-light);}
+  .cal-day.past{color:#C8C4BC;cursor:default;pointer-events:none;}
+  .cal-day.empty{pointer-events:none;}
+  .cal-day.today{font-weight:500;color:var(--accent);}
+  .cal-day.selected{background:var(--dark);color:white;font-weight:500;}
+
+  /* SLOTS */
+  .slots-section{display:none;margin-bottom:1rem;}
+  .slots-date-label{font-size:11px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px;}
+  .slots-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;}
+  .slots-period{font-size:11px;color:var(--muted);font-weight:500;letter-spacing:.04em;text-transform:uppercase;margin:10px 0 6px;}
+  .slots-period:first-child{margin-top:0;}
+  .slots-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+  .slot{padding:9px 6px;text-align:center;border:1.5px solid var(--border);border-radius:7px;font-size:13px;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent;}
+  .slot:active:not(.busy){border-color:var(--accent);color:var(--accent);}
+  .slot.selected{background:var(--dark);color:white;border-color:var(--dark);font-weight:500;}
+  .slot.busy{color:#C8C4BC;cursor:default;text-decoration:line-through;font-size:12px;}
+  .spinner{text-align:center;padding:20px;color:var(--muted);font-size:13px;}
+
+  /* SUMMARY (mobile: bottom sticky card) */
+  .summary-sticky{position:sticky;bottom:0;left:0;right:0;background:var(--dark);padding:14px 16px;z-index:50;display:none;}
+  .summary-sticky.show{display:block;}
+  .summary-sticky-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+  .summary-sticky-info{font-size:13px;color:rgba(255,255,255,0.7);}
+  .summary-sticky-price{font-size:18px;font-weight:500;color:var(--accent);}
+  .summary-sticky-sub{font-size:11px;color:rgba(255,255,255,0.4);margin-top:1px;}
+
+  /* FORM */
+  .form-group{margin-bottom:14px;}
+  label{font-size:13px;color:var(--muted);display:block;margin-bottom:5px;}
+  input[type=text],input[type=tel],input[type=email],textarea{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:9px;font-size:15px;font-family:'DM Sans',sans-serif;background:white;color:var(--dark);transition:border-color .15s;outline:none;-webkit-appearance:none;}
+  input:focus,textarea:focus{border-color:var(--accent);}
+  textarea{resize:none;height:75px;}
+
+  /* BUTTONS */
+  .btn-primary{width:100%;padding:14px;background:var(--accent);color:white;border:none;border-radius:12px;font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .18s;margin-top:14px;letter-spacing:-0.01em;-webkit-tap-highlight-color:transparent;}
+  .btn-primary:active{background:#B8994E;transform:scale(0.98);}
+  .btn-primary:disabled{opacity:.45;cursor:default;transform:none;}
+  .btn-back{background:transparent;border:none;color:var(--muted);font-size:13px;cursor:pointer;padding:0;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:4px;margin-top:10px;-webkit-tap-highlight-color:transparent;}
+
+  /* SUCCESS */
+  .success-screen{text-align:center;padding:2rem 1rem 3rem;}
+  .success-icon{width:64px;height:64px;background:#EAF3EA;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;font-size:28px;}
+  .success-title{font-family:'DM Serif Display',serif;font-size:1.8rem;letter-spacing:-0.02em;margin-bottom:.4rem;}
+  .success-sub{color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:1.5rem;}
+  .confirmation-box{background:white;border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;text-align:left;}
+  .conf-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:7px 0;border-bottom:1px solid var(--border);}
+  .conf-row:last-child{border-bottom:none;}
+  .conf-key{color:var(--muted);}
+  .conf-val{font-weight:500;text-align:right;max-width:60%;}
+
+  .screen{display:none;}
+  .screen.active{display:block;}
 </style>
 </head>
 <body>
@@ -114,129 +136,126 @@
       <div class="logo-sub">Agendamento online</div>
     </div>
   </div>
-  <div class="badge"><div class="dot"></div>Disponível hoje</div>
+  <div class="badge"><div class="dot"></div>Disponível</div>
 </header>
 
-<div class="container">
-
-  <div class="screen active" id="screen-1">
+<!-- STEP 1 -->
+<div class="screen active" id="screen-1">
+  <div class="container">
     <h1 class="page-title">Agende seu <em>horário</em></h1>
-    <p class="page-sub">Escolha o serviço, data e horário de sua preferência.</p>
+    <p class="page-sub">Escolha o serviço, data e horário.</p>
+
     <div class="steps-bar">
-      <div class="step-item active"><div class="step-num">1</div><span>Serviço & horário</span></div>
+      <div class="step-item active"><div class="step-num">1</div><span class="step-label">Serviço</span></div>
       <div class="step-line"></div>
-      <div class="step-item"><div class="step-num">2</div><span>Seus dados</span></div>
+      <div class="step-item"><div class="step-num">2</div><span class="step-label">Dados</span></div>
       <div class="step-line"></div>
-      <div class="step-item"><div class="step-num">3</div><span>Confirmação</span></div>
+      <div class="step-item"><div class="step-num">3</div><span class="step-label">Confirmação</span></div>
     </div>
-    <div class="booking-grid">
-      <div>
-        <div class="section-title">Escolha o serviço</div>
-        <div class="service-list">
-          <div class="service-item" data-id="1" data-name="Corte de cabelo" data-price="45" data-duration="30min" onclick="selectService(this)">
-            <div class="service-check">✓</div>
-            <div style="flex:1"><div class="service-name">Corte de cabelo</div><div class="service-meta">30 min</div></div>
-            <div class="service-price">R$45</div>
-          </div>
-          <div class="service-item" data-id="2" data-name="Barba" data-price="35" data-duration="20min" onclick="selectService(this)">
-            <div class="service-check">✓</div>
-            <div style="flex:1"><div class="service-name">Barba</div><div class="service-meta">20 min</div></div>
-            <div class="service-price">R$35</div>
-          </div>
-          <div class="service-item" data-id="3" data-name="Corte + Barba" data-price="70" data-duration="50min" onclick="selectService(this)">
-            <div class="service-check">✓</div>
-            <div style="flex:1"><div class="service-name">Corte + Barba</div><div class="service-meta">50 min · combo</div></div>
-            <div class="service-price">R$70</div>
-          </div>
-          <div class="service-item" data-id="4" data-name="Hidratação capilar" data-price="55" data-duration="40min" onclick="selectService(this)">
-            <div class="service-check">✓</div>
-            <div style="flex:1"><div class="service-name">Hidratação capilar</div><div class="service-meta">40 min</div></div>
-            <div class="service-price">R$55</div>
-          </div>
-        </div>
-        <div style="margin-top:28px;">
-          <div class="section-title">Escolha a data</div>
-          <div class="card" style="padding:20px 20px 16px;">
-            <div class="cal-nav">
-              <button onclick="prevMonth()">&#8592;</button>
-              <div class="cal-month" id="cal-month-label"></div>
-              <button onclick="nextMonth()">&#8594;</button>
-            </div>
-            <div class="cal-grid" id="cal-grid"></div>
-          </div>
-        </div>
-        <div id="slots-section" style="margin-top:20px;display:none;">
-          <div class="section-title">Horários disponíveis — <span id="selected-date-label"></span></div>
-          <div class="card" style="padding:16px 20px 20px;">
-            <div id="slots-loading" class="spinner">Carregando horários...</div>
-            <div id="slots-content" style="display:none;">
-              <div class="slots-label">Manhã</div>
-              <div class="slots-grid" id="slots-manha"></div>
-              <div class="slots-label">Tarde</div>
-              <div class="slots-grid" id="slots-tarde"></div>
-            </div>
-          </div>
-        </div>
+
+    <div class="section-title">Escolha o serviço</div>
+    <div class="service-list" style="margin-bottom:1.25rem;">
+      <div class="service-item" data-name="Corte de cabelo" data-price="45" data-duration="30min" onclick="selectService(this)">
+        <div class="service-check">✓</div>
+        <div style="flex:1"><div class="service-name">Corte de cabelo</div><div class="service-meta">30 min</div></div>
+        <div class="service-price">R$45</div>
       </div>
-      <div>
-        <div class="section-title">Resumo</div>
-        <div class="summary-card">
-          <div class="summary-title">Seu agendamento</div>
-          <div id="summary-empty" class="summary-placeholder">Selecione um serviço para começar</div>
-          <div id="summary-content" style="display:none;">
-            <div class="summary-row"><div class="summary-icon">✂</div><div><div class="summary-key">Serviço</div><div class="summary-val" id="s-service">—</div></div></div>
-            <div class="summary-row"><div class="summary-icon">📅</div><div><div class="summary-key">Data</div><div class="summary-val" id="s-date">—</div></div></div>
-            <div class="summary-row"><div class="summary-icon">⏰</div><div><div class="summary-key">Horário</div><div class="summary-val" id="s-time">—</div></div></div>
-            <div class="summary-divider"></div>
-            <div class="summary-total"><div class="summary-total-label">Total</div><div class="summary-total-val" id="s-price">—</div></div>
-          </div>
+      <div class="service-item" data-name="Barba" data-price="35" data-duration="20min" onclick="selectService(this)">
+        <div class="service-check">✓</div>
+        <div style="flex:1"><div class="service-name">Barba</div><div class="service-meta">20 min</div></div>
+        <div class="service-price">R$35</div>
+      </div>
+      <div class="service-item" data-name="Corte + Barba" data-price="70" data-duration="50min" onclick="selectService(this)">
+        <div class="service-check">✓</div>
+        <div style="flex:1"><div class="service-name">Corte + Barba</div><div class="service-meta">50 min · combo</div></div>
+        <div class="service-price">R$70</div>
+      </div>
+      <div class="service-item" data-name="Hidratação capilar" data-price="55" data-duration="40min" onclick="selectService(this)">
+        <div class="service-check">✓</div>
+        <div style="flex:1"><div class="service-name">Hidratação capilar</div><div class="service-meta">40 min</div></div>
+        <div class="service-price">R$55</div>
+      </div>
+    </div>
+
+    <div class="section-title">Escolha a data</div>
+    <div class="cal-wrap">
+      <div class="cal-nav">
+        <button onclick="prevMonth()">&#8592;</button>
+        <div class="cal-month" id="cal-month-label"></div>
+        <button onclick="nextMonth()">&#8594;</button>
+      </div>
+      <div class="cal-grid" id="cal-grid"></div>
+    </div>
+
+    <div class="slots-section" id="slots-section">
+      <div class="slots-date-label" id="slots-date-label">Horários disponíveis</div>
+      <div class="slots-card">
+        <div id="slots-loading" class="spinner">Carregando horários...</div>
+        <div id="slots-content" style="display:none;">
+          <div class="slots-period">Manhã</div>
+          <div class="slots-grid" id="slots-manha"></div>
+          <div class="slots-period">Tarde</div>
+          <div class="slots-grid" id="slots-tarde"></div>
         </div>
-        <button class="btn-primary" id="btn-next-1" disabled onclick="goToStep2()">Continuar →</button>
       </div>
     </div>
   </div>
 
-  <div class="screen" id="screen-2">
+  <div class="summary-sticky" id="summary-sticky">
+    <div class="summary-sticky-row">
+      <div>
+        <div class="summary-sticky-info" id="ss-service">—</div>
+        <div class="summary-sticky-sub" id="ss-datetime">Selecione data e horário</div>
+      </div>
+      <div class="summary-sticky-price" id="ss-price">—</div>
+    </div>
+    <button class="btn-primary" id="btn-next-1" disabled onclick="goToStep2()" style="margin-top:0;">Continuar →</button>
+  </div>
+</div>
+
+<!-- STEP 2 -->
+<div class="screen" id="screen-2">
+  <div class="container">
     <h1 class="page-title">Seus <em>dados</em></h1>
-    <p class="page-sub">Para confirmar seu agendamento, precisamos de algumas informações.</p>
-    <div class="steps-bar">
-      <div class="step-item done"><div class="step-num">✓</div><span>Serviço & horário</span></div>
-      <div class="step-line"></div>
-      <div class="step-item active"><div class="step-num">2</div><span>Seus dados</span></div>
-      <div class="step-line"></div>
-      <div class="step-item"><div class="step-num">3</div><span>Confirmação</span></div>
-    </div>
-    <div class="booking-grid">
-      <div>
-        <div class="card">
-          <div class="card-header"><h3>Informações de contato</h3><p>Você receberá a confirmação pelo WhatsApp</p></div>
-          <div class="card-body">
-            <div class="form-group"><label>Nome completo</label><input type="text" id="input-nome" placeholder="Ex: Carlos Silva" oninput="validateForm()"></div>
-            <div class="form-group"><label>WhatsApp</label><input type="tel" id="input-tel" placeholder="(11) 99999-9999" oninput="formatPhone(this);validateForm()"></div>
-            <div class="form-group"><label>E-mail <span style="color:var(--muted);font-weight:300;">(opcional)</span></label><input type="email" id="input-email" placeholder="seu@email.com"></div>
-            <div class="form-group"><label>Observações <span style="color:var(--muted);font-weight:300;">(opcional)</span></label><textarea id="input-obs" placeholder="Ex: Corte mais curto nas laterais..."></textarea></div>
-          </div>
-        </div>
-        <button class="btn-primary" id="btn-next-2" disabled onclick="goToStep3()">Confirmar agendamento →</button>
-        <button class="btn-back" onclick="goToStep1()">← Voltar</button>
-      </div>
-      <div>
-        <div class="section-title">Resumo</div>
-        <div class="summary-card">
-          <div class="summary-title">Seu agendamento</div>
-          <div class="summary-row"><div class="summary-icon">✂</div><div><div class="summary-key">Serviço</div><div class="summary-val" id="s2-service">—</div></div></div>
-          <div class="summary-row"><div class="summary-icon">📅</div><div><div class="summary-key">Data & Horário</div><div class="summary-val" id="s2-datetime">—</div></div></div>
-          <div class="summary-divider"></div>
-          <div class="summary-total"><div class="summary-total-label">Total</div><div class="summary-total-val" id="s2-price">—</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
+    <p class="page-sub">Para confirmar seu agendamento.</p>
 
-  <div class="screen" id="screen-3">
+    <div class="steps-bar">
+      <div class="step-item done"><div class="step-num">✓</div><span class="step-label">Serviço</span></div>
+      <div class="step-line"></div>
+      <div class="step-item active"><div class="step-num">2</div><span class="step-label">Dados</span></div>
+      <div class="step-line"></div>
+      <div class="step-item"><div class="step-num">3</div><span class="step-label">Confirmação</span></div>
+    </div>
+
+    <div class="card" style="margin-bottom:0;">
+      <div class="card-header"><h3>Informações de contato</h3><p>Confirmação via WhatsApp</p></div>
+      <div class="card-body">
+        <div class="form-group"><label>Nome completo</label><input type="text" id="input-nome" placeholder="Ex: Carlos Silva" oninput="validateForm()"></div>
+        <div class="form-group"><label>WhatsApp</label><input type="tel" id="input-tel" placeholder="(11) 99999-9999" oninput="formatPhone(this);validateForm()"></div>
+        <div class="form-group"><label>E-mail <span style="color:var(--muted);font-weight:300;">(opcional)</span></label><input type="email" id="input-email" placeholder="seu@email.com"></div>
+        <div class="form-group" style="margin-bottom:0;"><label>Observações <span style="color:var(--muted);font-weight:300;">(opcional)</span></label><textarea id="input-obs" placeholder="Ex: Corte mais curto nas laterais..."></textarea></div>
+      </div>
+    </div>
+
+    <div style="background:white;border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-top:12px;">
+      <div style="font-size:12px;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em;font-weight:500;">Resumo</div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid var(--border);"><span style="color:var(--muted)">Serviço</span><span style="font-weight:500;" id="r-service">—</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid var(--border);"><span style="color:var(--muted)">Data</span><span style="font-weight:500;" id="r-date">—</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid var(--border);"><span style="color:var(--muted)">Horário</span><span style="font-weight:500;" id="r-time">—</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:500;padding:8px 0 2px;"><span>Total</span><span style="color:var(--accent);" id="r-price">—</span></div>
+    </div>
+
+    <button class="btn-primary" id="btn-next-2" disabled onclick="goToStep3()">Confirmar agendamento →</button>
+    <button class="btn-back" onclick="goToStep1()">← Voltar</button>
+  </div>
+</div>
+
+<!-- STEP 3 -->
+<div class="screen" id="screen-3">
+  <div class="container">
     <div class="success-screen">
       <div class="success-icon">✓</div>
-      <h1 class="success-title">Agendamento <em style="font-style:italic;color:var(--accent);">confirmado!</em></h1>
+      <h1 class="success-title">Confirmado!</h1>
       <p class="success-sub">Seu horário está reservado. Você receberá a confirmação pelo WhatsApp em instantes.</p>
       <div class="confirmation-box">
         <div class="conf-row"><span class="conf-key">Cliente</span><span class="conf-val" id="c-nome">—</span></div>
@@ -246,94 +265,82 @@
         <div class="conf-row"><span class="conf-key">WhatsApp</span><span class="conf-val" id="c-tel">—</span></div>
         <div class="conf-row"><span class="conf-key">Valor</span><span class="conf-val" id="c-price">—</span></div>
       </div>
-      <div style="margin-top:1.5rem;">
-        <button class="btn-primary" style="max-width:300px;margin:0 auto;display:block;" onclick="resetAll()">Fazer novo agendamento</button>
-      </div>
+      <button class="btn-primary" style="max-width:320px;margin:1.5rem auto 0;display:block;" onclick="resetAll()">Fazer novo agendamento</button>
     </div>
   </div>
-
 </div>
 
 <script>
-// =====================================================
-// SUPABASE
-// =====================================================
 var SUPABASE_URL = 'https://msvvheuouratsgqlcyrg.supabase.co';
 var SUPABASE_KEY = 'sb_publishable_1ucHfP7zISTjwGusWQc7VA_ecIb4kL5';
 var db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 var MANHA = ['08:00','08:30','09:00','09:30','10:00','10:30','11:00','11:30'];
 var TARDE = ['13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00'];
-var months = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-var dows   = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+var MONTHS = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+var DOWS   = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+var state  = {service:null,date:null,time:null,year:0,month:0};
 
-var state = { service: null, date: null, time: null, year: 0, month: 0 };
-
-function init() {
-  var now = new Date();
-  state.year = now.getFullYear();
-  state.month = now.getMonth();
+function init(){
+  var n=new Date(); state.year=n.getFullYear(); state.month=n.getMonth();
   renderCal();
 }
 
-function renderCal() {
-  document.getElementById('cal-month-label').textContent = months[state.month] + ' ' + state.year;
-  var grid = document.getElementById('cal-grid');
-  grid.innerHTML = '';
-  dows.forEach(function(d){ var el=document.createElement('div');el.className='cal-dow';el.textContent=d;grid.appendChild(el); });
-  var first = new Date(state.year, state.month, 1).getDay();
-  var days  = new Date(state.year, state.month+1, 0).getDate();
-  var today = new Date(); today.setHours(0,0,0,0);
-  for(var i=0;i<first;i++){ var el=document.createElement('div');el.className='cal-day empty';grid.appendChild(el); }
+function fmtKey(y,m,d){return y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');}
+
+function renderCal(){
+  document.getElementById('cal-month-label').textContent=MONTHS[state.month]+' '+state.year;
+  var grid=document.getElementById('cal-grid'); grid.innerHTML='';
+  DOWS.forEach(function(d){var el=document.createElement('div');el.className='cal-dow';el.textContent=d;grid.appendChild(el);});
+  var first=new Date(state.year,state.month,1).getDay();
+  var days=new Date(state.year,state.month+1,0).getDate();
+  var today=new Date();today.setHours(0,0,0,0);
+  for(var i=0;i<first;i++){var el=document.createElement('div');el.className='cal-day empty';grid.appendChild(el);}
   for(var d=1;d<=days;d++){
     var el=document.createElement('div');el.className='cal-day';
     var dt=new Date(state.year,state.month,d);dt.setHours(0,0,0,0);
     var key=fmtKey(state.year,state.month+1,d);
-    if(dt<today) el.classList.add('past');
-    if(dt.getTime()===today.getTime()) el.classList.add('today');
-    if(state.date===key) el.classList.add('selected');
+    if(dt<today)el.classList.add('past');
+    if(dt.getTime()===today.getTime())el.classList.add('today');
+    if(state.date===key)el.classList.add('selected');
     el.textContent=d;
-    (function(dd,kk){ el.onclick=function(){ selectDate(dd,kk); }; })(d,key);
+    (function(dd,kk){el.onclick=function(){selectDate(dd,kk);};})(d,key);
     grid.appendChild(el);
   }
 }
 
-function fmtKey(y,m,d){ return y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0'); }
-function prevMonth(){ state.month--;if(state.month<0){state.month=11;state.year--;}renderCal(); }
-function nextMonth(){ state.month++;if(state.month>11){state.month=0;state.year++;}renderCal(); }
+function prevMonth(){state.month--;if(state.month<0){state.month=11;state.year--;}renderCal();}
+function nextMonth(){state.month++;if(state.month>11){state.month=0;state.year++;}renderCal();}
 
-async function selectDate(d, key) {
-  state.date = key;
-  state.time = null;
-  renderCal();
-  var label = d+' de '+months[state.month]+' de '+state.year;
-  document.getElementById('selected-date-label').textContent = label;
-  document.getElementById('slots-section').style.display = 'block';
-  document.getElementById('slots-loading').style.display = 'block';
-  document.getElementById('slots-content').style.display = 'none';
+async function selectDate(d,key){
+  state.date=key; state.time=null; renderCal();
+  var parts=key.split('-');
+  document.getElementById('slots-date-label').textContent='Horários — '+d+' de '+MONTHS[state.month];
+  document.getElementById('slots-section').style.display='block';
+  document.getElementById('slots-loading').style.display='block';
+  document.getElementById('slots-content').style.display='none';
+  document.getElementById('slots-section').scrollIntoView({behavior:'smooth',block:'nearest'});
 
-  var { data: ocupados } = await db.from('agendamentos').select('horario').eq('data', key).neq('status','cancelado');
-  var busySet = new Set((ocupados||[]).map(a=>a.horario));
+  var {data:ocupados}=await db.from('agendamentos').select('horario').eq('data',key).neq('status','cancelado');
+  var busySet=new Set((ocupados||[]).map(function(a){return a.horario;}));
+  document.getElementById('slots-loading').style.display='none';
+  document.getElementById('slots-content').style.display='block';
 
-  document.getElementById('slots-loading').style.display = 'none';
-  document.getElementById('slots-content').style.display = 'block';
-
-  function mkSlot(t) {
+  function mkSlot(t){
     var el=document.createElement('div');
     el.className='slot'+(busySet.has(t)?' busy':'');
     el.textContent=t;
-    if(!busySet.has(t)){ (function(tt){el.onclick=function(){selectTime(tt);};})(t); }
+    if(!busySet.has(t)){(function(tt){el.onclick=function(){selectTime(tt);};})(t);}
     return el;
   }
   var sm=document.getElementById('slots-manha');sm.innerHTML='';
   MANHA.forEach(function(t){sm.appendChild(mkSlot(t));});
   var st=document.getElementById('slots-tarde');st.innerHTML='';
   TARDE.forEach(function(t){st.appendChild(mkSlot(t));});
-
   updateSummary();
 }
 
-function selectTime(t) {
+function selectTime(t){
   state.time=t;
   document.querySelectorAll('.slot').forEach(function(el){
     el.classList.toggle('selected',el.textContent===t&&!el.classList.contains('busy'));
@@ -342,114 +349,106 @@ function selectTime(t) {
   checkStep1();
 }
 
-function selectService(el) {
+function selectService(el){
   document.querySelectorAll('.service-item').forEach(function(i){i.classList.remove('selected');});
   el.classList.add('selected');
-  state.service={id:el.dataset.id,name:el.dataset.name,price:el.dataset.price,duration:el.dataset.duration};
+  state.service={name:el.dataset.name,price:el.dataset.price,duration:el.dataset.duration};
   updateSummary();
   checkStep1();
 }
 
-function updateSummary() {
-  var hasAny=state.service||state.date||state.time;
-  document.getElementById('summary-empty').style.display=hasAny?'none':'block';
-  document.getElementById('summary-content').style.display=hasAny?'block':'none';
-  if(state.service) document.getElementById('s-service').textContent=state.service.name+' ('+state.service.duration+')';
-  if(state.date){ var p=state.date.split('-');document.getElementById('s-date').textContent=p[2]+'/'+p[1]+'/'+p[0]; }
-  document.getElementById('s-time').textContent=state.time||'—';
-  document.getElementById('s-price').textContent=state.service?'R$'+state.service.price:'—';
+function updateSummary(){
+  var sticky=document.getElementById('summary-sticky');
+  if(state.service){
+    sticky.classList.add('show');
+    document.getElementById('ss-service').textContent=state.service.name+' ('+state.service.duration+')';
+    document.getElementById('ss-price').textContent='R$'+state.service.price;
+    if(state.date&&state.time){
+      var p=state.date.split('-');
+      document.getElementById('ss-datetime').textContent=p[2]+'/'+p[1]+' às '+state.time;
+    } else {
+      document.getElementById('ss-datetime').textContent='Selecione data e horário';
+    }
+  }
 }
 
-function checkStep1() {
+function checkStep1(){
   document.getElementById('btn-next-1').disabled=!(state.service&&state.date&&state.time);
 }
 
-function goToStep2() {
+function goToStep2(){
+  var p=state.date.split('-');
+  document.getElementById('r-service').textContent=state.service.name;
+  document.getElementById('r-date').textContent=p[2]+'/'+p[1]+'/'+p[0];
+  document.getElementById('r-time').textContent=state.time;
+  document.getElementById('r-price').textContent='R$'+state.service.price;
   document.getElementById('screen-1').classList.remove('active');
   document.getElementById('screen-2').classList.add('active');
-  var p=state.date.split('-');
-  document.getElementById('s2-service').textContent=state.service.name;
-  document.getElementById('s2-datetime').textContent=p[2]+'/'+p[1]+'/'+p[0]+' às '+state.time;
-  document.getElementById('s2-price').textContent='R$'+state.service.price;
   window.scrollTo(0,0);
 }
 
-function goToStep1() {
+function goToStep1(){
   document.getElementById('screen-2').classList.remove('active');
   document.getElementById('screen-1').classList.add('active');
   window.scrollTo(0,0);
 }
 
-function formatPhone(el) {
+function formatPhone(el){
   var v=el.value.replace(/\D/g,'');
-  if(v.length<=11){ v=v.replace(/^(\d{2})(\d)/,'($1) $2');v=v.replace(/(\d{4,5})(\d{4})$/,'$1-$2'); }
+  if(v.length<=11){v=v.replace(/^(\d{2})(\d)/,'($1) $2');v=v.replace(/(\d{4,5})(\d{4})$/,'$1-$2');}
   el.value=v;
 }
 
-function validateForm() {
+function validateForm(){
   var nome=document.getElementById('input-nome').value.trim();
   var tel=document.getElementById('input-tel').value.replace(/\D/g,'');
   document.getElementById('btn-next-2').disabled=!(nome.length>2&&tel.length>=10);
 }
 
-async function goToStep3() {
-  var btn = document.getElementById('btn-next-2');
-  btn.disabled=true;
-  btn.textContent='Salvando...';
-
+async function goToStep3(){
+  var btn=document.getElementById('btn-next-2');
+  btn.disabled=true; btn.textContent='Salvando...';
   var nome=document.getElementById('input-nome').value.trim();
   var tel=document.getElementById('input-tel').value.replace(/\D/g,'');
   var email=document.getElementById('input-email').value.trim();
   var obs=document.getElementById('input-obs').value.trim();
 
-  var { error } = await db.from('agendamentos').insert({
-    cliente_phone: tel,
-    cliente_nome: nome,
-    cliente_email: email,
-    obs: obs,
-    servico: state.service.name,
-    preco: parseInt(state.service.price),
-    data: state.date,
-    horario: state.time,
-    status: 'confirmado',
-    created_at: new Date().toISOString(),
+  var {error}=await db.from('agendamentos').insert({
+    cliente_phone:tel,cliente_nome:nome,cliente_email:email,obs:obs,
+    servico:state.service.name,preco:parseInt(state.service.price),
+    data:state.date,horario:state.time,status:'confirmado',
+    created_at:new Date().toISOString(),
   });
 
-  if(error) {
-    alert('Erro ao salvar agendamento. Tente novamente.');
-    btn.disabled=false;
-    btn.textContent='Confirmar agendamento →';
+  if(error){
+    alert('Erro ao salvar. Tente novamente.');
+    btn.disabled=false; btn.textContent='Confirmar agendamento →';
     return;
   }
-
   var p=state.date.split('-');
-  var dateStr=p[2]+'/'+p[1]+'/'+p[0];
   document.getElementById('c-nome').textContent=nome;
   document.getElementById('c-service').textContent=state.service.name;
-  document.getElementById('c-date').textContent=dateStr;
+  document.getElementById('c-date').textContent=p[2]+'/'+p[1]+'/'+p[0];
   document.getElementById('c-time').textContent=state.time;
   document.getElementById('c-tel').textContent=document.getElementById('input-tel').value;
   document.getElementById('c-price').textContent='R$'+state.service.price;
-
   document.getElementById('screen-2').classList.remove('active');
   document.getElementById('screen-3').classList.add('active');
   window.scrollTo(0,0);
 }
 
-function resetAll() {
+function resetAll(){
   state={service:null,date:null,time:null,year:new Date().getFullYear(),month:new Date().getMonth()};
   document.querySelectorAll('.service-item').forEach(function(i){i.classList.remove('selected');});
   ['input-nome','input-tel','input-email','input-obs'].forEach(function(id){document.getElementById(id).value='';});
   document.getElementById('slots-section').style.display='none';
-  document.getElementById('summary-empty').style.display='block';
-  document.getElementById('summary-content').style.display='none';
+  document.getElementById('summary-sticky').classList.remove('show');
   document.getElementById('btn-next-1').disabled=true;
   document.getElementById('btn-next-2').disabled=true;
   document.getElementById('btn-next-2').textContent='Confirmar agendamento →';
   document.getElementById('screen-3').classList.remove('active');
   document.getElementById('screen-1').classList.add('active');
-  renderCal();
-  window.scrollTo(0,0);
+  renderCal(); window.scrollTo(0,0);
 }
 
 init();
