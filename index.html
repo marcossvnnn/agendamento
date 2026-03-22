@@ -262,7 +262,7 @@ async function loadServices(){
     el.dataset.name=s.nome;el.dataset.price=s.preco;el.dataset.duration=s.duracao;
     el.innerHTML=
       '<div class="service-check">✓</div>'
-      +'<div style="flex:1"><div class="service-name">'+s.nome+'</div><div class="service-meta">'+s.duracao+'</div></div>'
+      +'<div style="flex:1"><div class="service-name">'+s.nome+'</div></div>'
       +'<div class="service-price">R$'+s.preco+'</div>';
     el.onclick=function(){selectService(el);};
     list.appendChild(el);
